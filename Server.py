@@ -1,14 +1,15 @@
 import socket
 import threading
+import datetime
 
 class Customers:
     no_of_customers = 0
-    def __init__(self,product_bought,qty):
+    def __init__(self,product_bought,qty,addr,port):
         self.product_bought = product_bought
         self.qty = qty
-        self.cli_addr = "default"
-        self.cli_port = "default"
-        self.time = "default"
+        self.cli_addr = addr
+        self.cli_port = port
+        self.time = self.time_stamper()
         self.Increment_Customers()
         self.customer_no = Customers.no_of_customers
 
@@ -16,9 +17,13 @@ class Customers:
         print("*****Customer%d*****" %self.customer_no)
         print(self.product_bought)
         print(self.qty)
-        #print(self.cli_addr)
+        print(self.cli_addr)
+        print(self.cli_port)
+        print(self.time)
     def Increment_Customers(self):
         Customers.no_of_customers += 1
+    def time_stamper(self):
+        return str(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"))
 
 def Thread_Handler(c, addr, item_list, customer_list):  # item
     bought = 1
@@ -43,7 +48,7 @@ def Thread_Handler(c, addr, item_list, customer_list):  # item
             print("Requested quantity of mango is not available")
             bought = -1
         if (bought > 0):
-            customer = Customers("Mango", quantity)
+            customer = Customers("Mango", quantity,addr[0],addr[1])
             customer_list.append(customer)
     if (item == 'o'):
         sav = item_list["orange"]
@@ -53,7 +58,8 @@ def Thread_Handler(c, addr, item_list, customer_list):  # item
             print("Requested quantity of orange is not available")
             bought = -1
         if (bought > 0):
-            customer = Customers("Orange", quantity)
+
+            customer = Customers("Orange", quantity,addr[0],addr[1])
             customer_list.append(customer)
     if (item == 'g'):
         sav = item_list["guava"]
@@ -63,7 +69,7 @@ def Thread_Handler(c, addr, item_list, customer_list):  # item
             print("Requested quantity of guava is not available")
             bought = -1
         if (bought > 0):
-            customer = Customers("Guava", quantity)
+            customer = Customers("Guava", quantity,addr[0],addr[1])
             customer_list.append(customer)
     if (item == 'p'):
         sav = item_list["petrol"]
@@ -73,7 +79,7 @@ def Thread_Handler(c, addr, item_list, customer_list):  # item
             print("Requested quantity of petrol is not available")
             bought = -1
         if (bought > 0):
-            customer = Customers("Petrol", quantity)
+            customer = Customers("Petrol", quantity,addr[0],addr[1])
             customer_list.append(customer)
     input()
     lock.release()
